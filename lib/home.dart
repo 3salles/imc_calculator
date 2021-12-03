@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -14,6 +15,7 @@ class _HomeState extends State<Home> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String _infoText = 'Informe seus dados';
+  double _imc = 0.0;
 
   void _resetFields() {
     weightController.text = "";
@@ -28,22 +30,16 @@ class _HomeState extends State<Home> {
     setState(() {
       double weight = double.parse(weightController.text);
       double height = double.parse(heightController.text);
-      double imc = weight / (height * height);
+      _imc = weight / (height * height);
 
-      print(imc);
-
-      if (imc < 18.6) {
-        _infoText = "Abaixo do peso (${imc.toStringAsPrecision(3)})";
-      } else if (imc >= 18.6 && imc < 24.9) {
-        _infoText = "Peso deal(${imc.toStringAsPrecision(3)})";
-      } else if (imc >= 24.9 && imc < 29.9) {
-        _infoText = "Levemente acima do peso (${imc.toStringAsPrecision(3)})";
-      } else if (imc >= 29.9 && imc < 34.9) {
-        _infoText = "Obesidade Grau I (${imc.toStringAsPrecision(3)})";
-      } else if (imc >= 34.9 && imc < 39.9) {
-        _infoText = "Obesidade Grau II (${imc.toStringAsPrecision(3)})";
-      } else if (imc >= 40) {
-        _infoText = "Obesidade Grau III (${imc.toStringAsPrecision(3)})";
+      if (_imc < 18.5) {
+        _infoText = 'MAGREZA';
+      } else if (_imc >= 18.5 && _imc < 25.9) {
+        _infoText = "SAUDÁVEL";
+      } else if (_imc >= 25.9 && _imc < 29.9) {
+        _infoText = "SOBREPESO";
+      } else if (_imc >= 29.9) {
+        _infoText = "OBESIDADE";
       }
     });
   }
@@ -175,7 +171,8 @@ class _HomeState extends State<Home> {
                               color: Colors.greenAccent,
                             ),
                           ),
-                          contentPadding: const EdgeInsets.fromLTRB(20, 10 , 20, 10),
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(20, 10, 20, 10),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(50.0),
                             borderSide: const BorderSide(
@@ -194,8 +191,8 @@ class _HomeState extends State<Home> {
               Container(
                 margin: const EdgeInsets.fromLTRB(0, 30, 0, 20),
                 child: ElevatedButton(
-                  onPressed: (){
-                    if (_formKey.currentState!.validate()){
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
                       _calculateIMC();
                     }
                   },
@@ -242,7 +239,62 @@ class _HomeState extends State<Home> {
               //     fontSize: 22,
               //   ),),
               // ),
-              Text(_infoText)
+              Text(_infoText),
+              SfRadialGauge(axes: <RadialAxis>[
+                RadialAxis(
+                    showLabels: false,
+                    minimum: 0,
+                    maximum: 40,
+                    ranges: <GaugeRange>[
+                      GaugeRange(
+                          startValue: 0,
+                          endValue: 18.5,
+                          color: Colors.purple.shade600,
+                          startWidth: 50,
+                          endWidth: 50),
+                      GaugeRange(
+                          startValue: 18.5,
+                          endValue: 25.9,
+                          color: Colors.greenAccent.shade400,
+                          startWidth: 50,
+                          endWidth: 50),
+                      GaugeRange(
+                          startValue: 25.9,
+                          endValue: 29.9,
+                          color: Colors.deepOrangeAccent,
+                          startWidth: 50,
+                          endWidth: 50),
+                      GaugeRange(
+                          startValue: 29.9,
+                          endValue: 40,
+                          color: Colors.pinkAccent,
+                          startWidth: 50,
+                          endWidth: 50),
+                    ],
+                    pointers: <GaugePointer>[
+                      MarkerPointer(
+                        value: _imc,
+                        markerType: MarkerType.triangle,
+                        markerHeight: 30,
+                        markerWidth: 30,
+                        markerOffset: 40,
+                        color: Colors.white,
+                      )
+                    ],
+                    annotations: <GaugeAnnotation>[
+                      GaugeAnnotation(
+                        axisValue: _imc,
+                        positionFactor: 0.05,
+                        widget: Text(
+                          _imc.toStringAsFixed(2),
+                          style: const TextStyle(
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.teal),
+                        ),
+                      )
+                    ])
+              ]),
             ],
           ),
         ),
