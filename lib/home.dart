@@ -20,7 +20,7 @@ class _HomeState extends State<Home> {
         ],
       ),
       backgroundColor: Colors.white,
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(16.0, 8.0, 8.0, 0.0),
         child: Column(
           children: <Widget>[
