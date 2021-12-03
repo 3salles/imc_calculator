@@ -54,13 +54,17 @@ class _HomeState extends State<Home> {
                       textAlign: TextAlign.right,
                       decoration: InputDecoration(
                         contentPadding: const EdgeInsets.all(20.0),
-                        hintText: "1,00",
-                        hintStyle: const TextStyle(fontSize: 20.0, color: Colors.black26),
-                        suffixIcon: const Text('KG', style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.greenAccent,
-                        ),),
+                        hintText: "00,0",
+                        hintStyle: const TextStyle(
+                            fontSize: 20.0, color: Colors.black26),
+                        suffixIcon: const Text(
+                          'KG',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.greenAccent,
+                          ),
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(50.0),
                           borderSide: const BorderSide(
@@ -105,13 +109,17 @@ class _HomeState extends State<Home> {
                     child: TextField(
                       textAlign: TextAlign.right,
                       decoration: InputDecoration(
-                        hintText: "1,00",
-                        hintStyle: const TextStyle(fontSize: 20.0, color: Colors.black26),
-                        suffixIcon: const Text('M', style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.greenAccent,
-                        ),),
+                        hintText: "0,00",
+                        hintStyle: const TextStyle(
+                            fontSize: 20.0, color: Colors.black26),
+                        suffixIcon: const Text(
+                          'M',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.greenAccent,
+                          ),
+                        ),
                         contentPadding: const EdgeInsets.all(20.0),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(50.0),
@@ -127,6 +135,53 @@ class _HomeState extends State<Home> {
                   ),
                 )
               ],
+            ),
+            Container(
+              margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+              child: ElevatedButton(
+                onPressed: () {},
+                child: const Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(
+                    "CALCULAR",
+                    style: TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.greenAccent,
+                ),
+              ),
+            ),
+            const Padding(
+              padding:  EdgeInsets.all(8.0),
+              child:  Text("VOCÊ ESTÁ", style: TextStyle(
+                color: Colors.black26,
+                fontSize: 18,
+              ),
+              ),
+            ),
+            const Padding(
+              padding:  EdgeInsets.all(16.0),
+              child:  Text("SAUDÁVEL", style: TextStyle(
+                color: Colors.greenAccent,
+                fontSize: 26,
+              ),),
+            ),
+            const Padding(
+              padding:  EdgeInsets.all(4.0),
+              child:  Text('SEU PESO IDEAL É ENTRE', style: TextStyle(
+                color: Colors.black26,
+                fontSize: 18,
+              ),),
+            ),
+            const Padding(
+              padding:  EdgeInsets.all(8.0),
+              child:  Text('50 kg a 60 kg', style: TextStyle(
+                color: Colors.greenAccent,
+                fontSize: 22,
+              ),),
             ),
           ],
         ),
