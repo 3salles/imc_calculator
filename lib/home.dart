@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -14,13 +15,19 @@ class _HomeState extends State<Home> {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String _infoText = 'Informe seus dados';
+  double _imc = 0.0;
+
+  Color _textColor = Colors.white;
+
+  bool _notZero = false;
 
   void _resetFields() {
     weightController.text = "";
     heightController.text = "";
     setState(() {
-      _infoText = "Informe seus dados";
+      _infoText = "";
       _formKey = GlobalKey<FormState>();
+      _notZero = false;
     });
   }
 
@@ -28,22 +35,21 @@ class _HomeState extends State<Home> {
     setState(() {
       double weight = double.parse(weightController.text);
       double height = double.parse(heightController.text);
-      double imc = weight / (height * height);
+      _imc = weight / (height * height);
+      _notZero = true;
 
-      print(imc);
-
-      if (imc < 18.6) {
-        _infoText = "Abaixo do peso (${imc.toStringAsPrecision(3)})";
-      } else if (imc >= 18.6 && imc < 24.9) {
-        _infoText = "Peso deal(${imc.toStringAsPrecision(3)})";
-      } else if (imc >= 24.9 && imc < 29.9) {
-        _infoText = "Levemente acima do peso (${imc.toStringAsPrecision(3)})";
-      } else if (imc >= 29.9 && imc < 34.9) {
-        _infoText = "Obesidade Grau I (${imc.toStringAsPrecision(3)})";
-      } else if (imc >= 34.9 && imc < 39.9) {
-        _infoText = "Obesidade Grau II (${imc.toStringAsPrecision(3)})";
-      } else if (imc >= 40) {
-        _infoText = "Obesidade Grau III (${imc.toStringAsPrecision(3)})";
+      if (_imc < 18.5) {
+        _infoText = 'MAGREZA';
+        _textColor = Colors.purple;
+      } else if (_imc >= 18.5 && _imc < 25.9) {
+        _infoText = "SAUDÁVEL";
+        _textColor = Colors.greenAccent;
+      } else if (_imc >= 25.9 && _imc < 29.9) {
+        _infoText = "SOBREPESO";
+        _textColor = Colors.orangeAccent;
+      } else if (_imc >= 29.9) {
+        _infoText = "OBESIDADE";
+        _textColor = Colors.pink;
       }
     });
   }
@@ -175,7 +181,8 @@ class _HomeState extends State<Home> {
                               color: Colors.greenAccent,
                             ),
                           ),
-                          contentPadding: const EdgeInsets.fromLTRB(20, 10 , 20, 10),
+                          contentPadding:
+                              const EdgeInsets.fromLTRB(20, 10, 20, 10),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(50.0),
                             borderSide: const BorderSide(
@@ -194,8 +201,8 @@ class _HomeState extends State<Home> {
               Container(
                 margin: const EdgeInsets.fromLTRB(0, 30, 0, 20),
                 child: ElevatedButton(
-                  onPressed: (){
-                    if (_formKey.currentState!.validate()){
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
                       _calculateIMC();
                     }
                   },
@@ -213,36 +220,91 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
-              // const Padding(
-              //   padding:  EdgeInsets.all(8.0),
-              //   child:  Text("VOCÊ ESTÁ", style: TextStyle(
-              //     color: Colors.black26,
-              //     fontSize: 18,
-              //   ),
-              //   ),
+              
               // ),
-              // const Padding(
-              //   padding:  EdgeInsets.all(16.0),
-              //   child:  Text("SAUDÁVEL", style: TextStyle(
-              //     color: Colors.greenAccent,
-              //     fontSize: 26,
-              //   ),),
-              // ),
-              // const Padding(
-              //   padding:  EdgeInsets.all(4.0),
-              //   child:  Text('SEU PESO IDEAL É ENTRE', style: TextStyle(
-              //     color: Colors.black26,
-              //     fontSize: 18,
-              //   ),),
-              // ),
-              // const Padding(
-              //   padding:  EdgeInsets.all(8.0),
-              //   child:  Text('50 kg a 60 kg', style: TextStyle(
-              //     color: Colors.greenAccent,
-              //     fontSize: 22,
-              //   ),),
-              // ),
-              Text(_infoText)
+              _notZero ? 
+              Column(
+                children:  <Widget> [
+                  const Padding(
+                padding:  EdgeInsets.all(8.0),
+                child:  Text("VOCÊ ESTÁ", style: TextStyle(
+                  color: Colors.black26,
+                  fontSize: 18,
+                ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child:  Text(_infoText, style: TextStyle(
+                  color: _textColor,
+                  fontSize: 26,
+                ),),
+              ),
+              ],
+              )
+              : const Padding(
+                padding: EdgeInsets.all(20.0),
+                child:  Text("Informe seus dados", style: TextStyle(
+                  color: Colors.greenAccent,
+                  fontSize: 26,
+                ),),
+              ),
+              if (_notZero) SfRadialGauge(axes: <RadialAxis>[
+                RadialAxis(
+                    showLabels: false,
+                    minimum: 0,
+                    maximum: 40,
+                    ranges: <GaugeRange>[
+                      GaugeRange(
+                          startValue: 0,
+                          endValue: 18.5,
+                          color: Colors.purple.shade600,
+                          startWidth: 50,
+                          endWidth: 50),
+                      GaugeRange(
+                          startValue: 18.5,
+                          endValue: 25.9,
+                          color: Colors.greenAccent.shade400,
+                          startWidth: 50,
+                          endWidth: 50),
+                      GaugeRange(
+                          startValue: 25.9,
+                          endValue: 29.9,
+                          color: Colors.deepOrangeAccent,
+                          startWidth: 50,
+                          endWidth: 50),
+                      GaugeRange(
+                          startValue: 29.9,
+                          endValue: 40,
+                          color: Colors.pinkAccent,
+                          startWidth: 50,
+                          endWidth: 50),
+                    ],
+                    pointers: <GaugePointer>[
+                      MarkerPointer(
+                        value: _imc,
+                        markerType: MarkerType.triangle,
+                        markerHeight: 30,
+                        markerWidth: 30,
+                        markerOffset: 40,
+                        color: Colors.white,
+                      )
+                    ],
+                    annotations: <GaugeAnnotation>[
+                      GaugeAnnotation(
+                        axisValue: _imc,
+                        positionFactor: 0.05,
+                        widget: Text(
+                          _imc.toStringAsFixed(2),
+                          style: const TextStyle(
+                              fontSize: 40,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.teal),
+                        ),
+                      )
+                    ])
+              ],
+              ),
             ],
           ),
         ),
