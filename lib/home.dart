@@ -17,12 +17,17 @@ class _HomeState extends State<Home> {
   String _infoText = 'Informe seus dados';
   double _imc = 0.0;
 
+  Color _textColor = Colors.white;
+
+  bool _notZero = false;
+
   void _resetFields() {
     weightController.text = "";
     heightController.text = "";
     setState(() {
-      _infoText = "Informe seus dados";
+      _infoText = "";
       _formKey = GlobalKey<FormState>();
+      _notZero = false;
     });
   }
 
@@ -31,15 +36,20 @@ class _HomeState extends State<Home> {
       double weight = double.parse(weightController.text);
       double height = double.parse(heightController.text);
       _imc = weight / (height * height);
+      _notZero = true;
 
       if (_imc < 18.5) {
         _infoText = 'MAGREZA';
+        _textColor = Colors.purple;
       } else if (_imc >= 18.5 && _imc < 25.9) {
         _infoText = "SAUDÁVEL";
+        _textColor = Colors.greenAccent;
       } else if (_imc >= 25.9 && _imc < 29.9) {
         _infoText = "SOBREPESO";
+        _textColor = Colors.orangeAccent;
       } else if (_imc >= 29.9) {
         _infoText = "OBESIDADE";
+        _textColor = Colors.pink;
       }
     });
   }
@@ -210,37 +220,36 @@ class _HomeState extends State<Home> {
                   ),
                 ),
               ),
-              // const Padding(
-              //   padding:  EdgeInsets.all(8.0),
-              //   child:  Text("VOCÊ ESTÁ", style: TextStyle(
-              //     color: Colors.black26,
-              //     fontSize: 18,
-              //   ),
-              //   ),
+              
               // ),
-              // const Padding(
-              //   padding:  EdgeInsets.all(16.0),
-              //   child:  Text("SAUDÁVEL", style: TextStyle(
-              //     color: Colors.greenAccent,
-              //     fontSize: 26,
-              //   ),),
-              // ),
-              // const Padding(
-              //   padding:  EdgeInsets.all(4.0),
-              //   child:  Text('SEU PESO IDEAL É ENTRE', style: TextStyle(
-              //     color: Colors.black26,
-              //     fontSize: 18,
-              //   ),),
-              // ),
-              // const Padding(
-              //   padding:  EdgeInsets.all(8.0),
-              //   child:  Text('50 kg a 60 kg', style: TextStyle(
-              //     color: Colors.greenAccent,
-              //     fontSize: 22,
-              //   ),),
-              // ),
-              Text(_infoText),
-              SfRadialGauge(axes: <RadialAxis>[
+              _notZero ? 
+              Column(
+                children:  <Widget> [
+                  const Padding(
+                padding:  EdgeInsets.all(8.0),
+                child:  Text("VOCÊ ESTÁ", style: TextStyle(
+                  color: Colors.black26,
+                  fontSize: 18,
+                ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child:  Text(_infoText, style: TextStyle(
+                  color: _textColor,
+                  fontSize: 26,
+                ),),
+              ),
+              ],
+              )
+              : const Padding(
+                padding: EdgeInsets.all(20.0),
+                child:  Text("Informe seus dados", style: TextStyle(
+                  color: Colors.greenAccent,
+                  fontSize: 26,
+                ),),
+              ),
+              if (_notZero) SfRadialGauge(axes: <RadialAxis>[
                 RadialAxis(
                     showLabels: false,
                     minimum: 0,
@@ -294,7 +303,8 @@ class _HomeState extends State<Home> {
                         ),
                       )
                     ])
-              ]),
+              ],
+              ),
             ],
           ),
         ),
